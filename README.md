@@ -8,3 +8,19 @@ A work in progress repo of React utility components that can be used with the pa
 
 
 Full example usage code is available in the `src/examples` directory. Have a look at a [live working version here](https://newbreedofgeek.github.io/react-particle-io-utilities/)
+
+### get started
+- run
+```
+npm install --save react-particle-io-utilities
+```
+
+- bring RssiSignalStrength into your project like so
+```
+var {RssiSignalStrength} = require('react-particle-io-utilities')
+```
+
+- then use it like so
+```
+<RssiSignalStrength deviceId="electron-id-12345" rssi="-56" />
+```
