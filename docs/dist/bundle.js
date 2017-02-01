@@ -29098,6 +29098,12 @@
 
 	'use strict';
 
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
 	var _react = __webpack_require__(77);
 
 	var _react2 = _interopRequireDefault(_react);
@@ -29106,31 +29112,77 @@
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
 	__webpack_require__(265);
 
-	var Example = function Example() {
-	  return _react2.default.createElement(
-	    'div',
-	    null,
-	    _react2.default.createElement(
-	      'h1',
-	      null,
-	      'RssiSignalStrength component'
-	    ),
-	    _react2.default.createElement(
-	      'h2',
-	      null,
-	      'This react component duplicates the 1-5 bar logic for Electron signal strength (based on rssi) as well as shows a color block to indicate signal strenth as a single RGB color. You can use the RGB color to implement a RGB led on your Electron and then remote monitor the Electron for trouble shooting.'
-	    ),
-	    _react2.default.createElement(
-	      'div',
-	      { className: 'all-signal-strengths' },
-	      _react2.default.createElement(_main.RssiSignalStrength, { deviceId: 'electron-id-12345', rssi: '-56' })
-	    )
-	  );
-	};
+	var Example = function (_Component) {
+	  _inherits(Example, _Component);
 
-	module.exports = Example;
+	  function Example(props) {
+	    _classCallCheck(this, Example);
+
+	    var _this = _possibleConstructorReturn(this, (Example.__proto__ || Object.getPrototypeOf(Example)).call(this, props));
+
+	    _this.state = {
+	      rssi: -51
+	    };
+
+	    _this.rssiTestData = [-51, -57, -58, -69, -81, -93, -104, -113, -114, -50, 1, 2, 3, 0];
+	    return _this;
+	  }
+
+	  _createClass(Example, [{
+	    key: 'componentDidMount',
+	    value: function componentDidMount() {
+	      var _this2 = this;
+
+	      setInterval(function () {
+	        var nextVal = _this2.rssiTestData.indexOf(_this2.state.rssi) + 1;
+
+	        _this2.setState({
+	          rssi: _this2.rssiTestData[nextVal >= _this2.rssiTestData.length ? 0 : nextVal]
+	        });
+	      }, 2000);
+	    }
+	  }, {
+	    key: 'render',
+	    value: function render() {
+	      return _react2.default.createElement(
+	        'div',
+	        null,
+	        _react2.default.createElement(
+	          'h1',
+	          null,
+	          'RssiSignalStrength component'
+	        ),
+	        _react2.default.createElement(
+	          'h2',
+	          null,
+	          'This react component duplicates the 1-5 bar logic for Electron signal strength (based on rssi) as well as shows a color block to indicate signal strenth as a single RGB color. You can use the RGB color to implement a RGB led on your Electron and then remote monitor the Electron for trouble shooting.'
+	        ),
+	        _react2.default.createElement(
+	          'div',
+	          { className: 'all-signal-strengths' },
+	          _react2.default.createElement(_main.RssiSignalStrength, { deviceId: 'electron-id-12345', rssi: this.state.rssi })
+	        ),
+	        _react2.default.createElement(
+	          'div',
+	          { 'class': 'desc' },
+	          'The above example cycles through these dBm values [-51, -57, -58, -69, -81, -93, -104, -113, -114, -50, 1, 2, 3, 0]'
+	        )
+	      );
+	    }
+	  }]);
+
+	  return Example;
+	}(_react.Component);
+
+	exports.default = Example;
 
 /***/ },
 /* 254 */
@@ -29170,7 +29222,9 @@
 	  var barsUi = [];
 
 	  if (props.rssi < 0) {
-	    if (props.rssi >= -57) {
+	    if (props.rssi < -113 || props.rssi > -51) {
+	      errorMsg = 'error = not in valid dBm range';
+	    } else if (props.rssi >= -57) {
 	      strengthBars = 5;
 	    } else if (props.rssi > -68) {
 	      strengthBars = 4;
@@ -29180,8 +29234,10 @@
 	      strengthBars = 2;
 	    } else if (props.rssi > -104) {
 	      strengthBars = 1;
+	    } else {
+	      errorMsg = 'error = not in acceptable dBm range';
 	    }
-	  } else if (props.rssi > 2) {
+	  } else if (props.rssi == 0 || props.rssi > 2) {
 	    errorMsg = 'unknown error code = ' + props.rssi;
 	  } else {
 	    errorMsg = 'error code = ' + props.rssi;
@@ -30169,7 +30225,7 @@
 
 
 	// module
-	exports.push([module.id, ".rssi-signal-strength {\n  border: solid 1px black;\n  display: inline-block;\n  padding: 5px;\n  text-align: center;\n  margin: 5px;\n  border-radius: 3px;\n  background-color: rgba(204, 204, 204, 0.2);\n}\n\n.strength-bars {\n  margin: 3px 0;\n}\n\n.bar {\n  width: 10px;\n  height: 30px;\n  display: inline-block;\n  border: solid 1px grey;\n  margin-left: 1px;\n}\n\n.bar-null {\n  width: 10px;\n  height: 30px;\n  background-color: grey;\n}\n\n.strength-color {\n  width: 40px;\n  height: 40px;\n  margin: auto;\n}\n\n.strength-0 {\n  background-color: black;\n}\n\n.strength-1 {\n  background-color: rgb(255, 0, 0);\n}\n\n.strength-2 {\n  background-color: rgb(255,140,0);\n}\n\n.strength-3 {\n  background-color: rgb(255,255,0);\n}\n\n.strength-4 {\n  background-color: rgb(173,255,47);\n}\n\n.strength-5 {\n  background-color: rgb(0, 255, 0);\n}\n", ""]);
+	exports.push([module.id, ".rssi-signal-strength {\n  border: solid 1px black;\n  display: inline-block;\n  padding: 5px;\n  text-align: center;\n  margin: 5px;\n  border-radius: 3px;\n  background-color: rgba(204, 204, 204, 0.2);\n}\n\n.strength-bars {\n  margin: 3px 0;\n}\n\n.bar {\n  width: 10px;\n  height: 30px;\n  display: inline-block;\n  border: solid 1px grey;\n  margin-left: 1px;\n}\n\n.bar-null {\n  width: 10px;\n  height: 30px;\n  display: inline-block;\n  background-color: grey;\n}\n\n.strength-color {\n  width: 40px;\n  height: 40px;\n  margin: auto;\n}\n\n.strength-0 {\n  background-color: grey;\n}\n\n.strength-1 {\n  background-color: rgb(255, 0, 0);\n}\n\n.strength-2 {\n  background-color: rgb(255,140,0);\n}\n\n.strength-3 {\n  background-color: rgb(255,255,0);\n}\n\n.strength-4 {\n  background-color: rgb(173,255,47);\n}\n\n.strength-5 {\n  background-color: rgb(0, 255, 0);\n}\n", ""]);
 
 	// exports
 

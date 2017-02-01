@@ -44,7 +44,7 @@ describe('RssiSignalStrength', () => {
     });
   });
 
-
+    // rssi: (int) is the signal strength with range -113dBm to -51dBm (in 2dBm steps).
     /*   signal strength (u-Blox Sara U2 and G3 modules)
      *   0: < -105 dBm
      *   1: < -93 dBm
@@ -54,6 +54,20 @@ describe('RssiSignalStrength', () => {
      *   5: >= -57 dBm
      */
 
+   describe('signal strength 5 render test (rssi -51, which is the best possible in accepted range)', () => {
+     const { enzymeWrapper } = setup({
+       rssi: '-51'
+     });
+
+     it('should render correct dom for signal strength 5', () => {
+       expect(enzymeWrapper.find('.device-id').text()).to.be.equal('electron-id-12345');
+       expect(enzymeWrapper.find('.rssi-val').text()).to.be.equal('rssi -51 dBm');
+       expect(enzymeWrapper.find('.error').text()).to.be.equal('');
+       expect(enzymeWrapper.find('.strength-bars').children()).to.have.length(5);
+       expect(enzymeWrapper.find('.strength-color.strength-5')).to.have.length(1);
+     });
+   });
+
    describe('signal strength 5 render test (rssi -57)', () => {
      const { enzymeWrapper } = setup({
        rssi: '-57'
@@ -62,20 +76,6 @@ describe('RssiSignalStrength', () => {
      it('should render correct dom for signal strength 5', () => {
        expect(enzymeWrapper.find('.device-id').text()).to.be.equal('electron-id-12345');
        expect(enzymeWrapper.find('.rssi-val').text()).to.be.equal('rssi -57 dBm');
-       expect(enzymeWrapper.find('.error').text()).to.be.equal('');
-       expect(enzymeWrapper.find('.strength-bars').children()).to.have.length(5);
-       expect(enzymeWrapper.find('.strength-color.strength-5')).to.have.length(1);
-     });
-   });
-
-   describe('signal strength 5 render test (rssi -50)', () => {
-     const { enzymeWrapper } = setup({
-       rssi: '-50'
-     });
-
-     it('should render correct dom for signal strength 5', () => {
-       expect(enzymeWrapper.find('.device-id').text()).to.be.equal('electron-id-12345');
-       expect(enzymeWrapper.find('.rssi-val').text()).to.be.equal('rssi -50 dBm');
        expect(enzymeWrapper.find('.error').text()).to.be.equal('');
        expect(enzymeWrapper.find('.strength-bars').children()).to.have.length(5);
        expect(enzymeWrapper.find('.strength-color.strength-5')).to.have.length(1);
@@ -96,63 +96,113 @@ describe('RssiSignalStrength', () => {
      });
    });
 
-   describe('signal strength 3 render test (rssi -70)', () => {
+   describe('signal strength 3 render test (rssi -69)', () => {
      const { enzymeWrapper } = setup({
-       rssi: '-70'
+       rssi: '-69'
      });
 
      it('should render correct dom for signal strength 3', () => {
        expect(enzymeWrapper.find('.device-id').text()).to.be.equal('electron-id-12345');
-       expect(enzymeWrapper.find('.rssi-val').text()).to.be.equal('rssi -70 dBm');
+       expect(enzymeWrapper.find('.rssi-val').text()).to.be.equal('rssi -69 dBm');
        expect(enzymeWrapper.find('.error').text()).to.be.equal('');
        expect(enzymeWrapper.find('.strength-bars').children()).to.have.length(3);
        expect(enzymeWrapper.find('.strength-color.strength-3')).to.have.length(1);
      });
    });
 
-   describe('signal strength 2 render test (rssi -82)', () => {
+   describe('signal strength 2 render test (rssi -81)', () => {
      const { enzymeWrapper } = setup({
-       rssi: '-82'
+       rssi: '-81'
      });
 
      it('should render correct dom for signal strength 2', () => {
        expect(enzymeWrapper.find('.device-id').text()).to.be.equal('electron-id-12345');
-       expect(enzymeWrapper.find('.rssi-val').text()).to.be.equal('rssi -82 dBm');
+       expect(enzymeWrapper.find('.rssi-val').text()).to.be.equal('rssi -81 dBm');
        expect(enzymeWrapper.find('.error').text()).to.be.equal('');
        expect(enzymeWrapper.find('.strength-bars').children()).to.have.length(2);
        expect(enzymeWrapper.find('.strength-color.strength-2')).to.have.length(1);
      });
    });
 
-   describe('signal strength 1 render test (rssi -94)', () => {
+   describe('signal strength 1 render test (rssi -93)', () => {
      const { enzymeWrapper } = setup({
-       rssi: '-94'
+       rssi: '-93'
      });
 
      it('should render correct dom for signal strength 1', () => {
        expect(enzymeWrapper.find('.device-id').text()).to.be.equal('electron-id-12345');
-       expect(enzymeWrapper.find('.rssi-val').text()).to.be.equal('rssi -94 dBm');
+       expect(enzymeWrapper.find('.rssi-val').text()).to.be.equal('rssi -93 dBm');
        expect(enzymeWrapper.find('.error').text()).to.be.equal('');
        expect(enzymeWrapper.find('.strength-bars').children()).to.have.length(1);
        expect(enzymeWrapper.find('.strength-color.strength-1')).to.have.length(1);
      });
    });
 
-   describe('signal strength 0 render test (rssi -106)', () => {
+
+   // S: in range but not acceptable
+   describe('signal strength 0 and error "not in acceptable dBm range" (rssi -104)', () => {
      const { enzymeWrapper } = setup({
-       rssi: '-106'
+       rssi: '-104'
      });
 
      it('should render correct dom for signal strength 0', () => {
        expect(enzymeWrapper.find('.device-id').text()).to.be.equal('electron-id-12345');
-       expect(enzymeWrapper.find('.rssi-val').text()).to.be.equal('rssi -106 dBm');
-       expect(enzymeWrapper.find('.error').text()).to.be.equal('');
+       expect(enzymeWrapper.find('.rssi-val').text()).to.be.equal('rssi -104 dBm');
+       expect(enzymeWrapper.find('.error').text()).to.be.equal('error = not in acceptable dBm range');
+       expect(enzymeWrapper.find('.strength-bars').children()).to.have.length(1);
+       expect(enzymeWrapper.find('.strength-color.strength-0')).to.have.length(1);
+     });
+   });
+
+   describe('signal strength 0 and error "not in acceptable dBm range" (rssi -113, which is the worst possible in accepted range but still not acceptable)', () => {
+     const { enzymeWrapper } = setup({
+       rssi: '-113'
+     });
+
+     it('should render correct dom for signal strength 0', () => {
+       expect(enzymeWrapper.find('.device-id').text()).to.be.equal('electron-id-12345');
+       expect(enzymeWrapper.find('.rssi-val').text()).to.be.equal('rssi -113 dBm');
+       expect(enzymeWrapper.find('.error').text()).to.be.equal('error = not in acceptable dBm range');
+       expect(enzymeWrapper.find('.strength-bars').children()).to.have.length(1);
+       expect(enzymeWrapper.find('.strength-color.strength-0')).to.have.length(1);
+     });
+   });
+   // E: in range but not acceptable
+
+   // S: out of range
+   describe('signal strength 0 and error "not in valid dBm range" (rssi -114)', () => {
+     const { enzymeWrapper } = setup({
+       rssi: '-114'
+     });
+
+     it('should render correct dom for signal strength 0', () => {
+       expect(enzymeWrapper.find('.device-id').text()).to.be.equal('electron-id-12345');
+       expect(enzymeWrapper.find('.rssi-val').text()).to.be.equal('rssi -114 dBm');
+       expect(enzymeWrapper.find('.error').text()).to.be.equal('error = not in valid dBm range');
        expect(enzymeWrapper.find('.strength-bars').children()).to.have.length(1);
        expect(enzymeWrapper.find('.bar-null')).to.have.length(1);
        expect(enzymeWrapper.find('.strength-color.strength-0')).to.have.length(1);
      });
    });
 
+   describe('signal strength 0 and error "not in valid dBm range" (rssi -50)', () => {
+     const { enzymeWrapper } = setup({
+       rssi: '-50'
+     });
+
+     it('should render correct dom for signal strength 0', () => {
+       expect(enzymeWrapper.find('.device-id').text()).to.be.equal('electron-id-12345');
+       expect(enzymeWrapper.find('.rssi-val').text()).to.be.equal('rssi -50 dBm');
+       expect(enzymeWrapper.find('.error').text()).to.be.equal('error = not in valid dBm range');
+       expect(enzymeWrapper.find('.strength-bars').children()).to.have.length(1);
+       expect(enzymeWrapper.find('.bar-null')).to.have.length(1);
+       expect(enzymeWrapper.find('.strength-color.strength-0')).to.have.length(1);
+     });
+   });
+   // E: out of range
+
+
+   // S: Error Codes
    describe('signal strength 0 and error test for error code 1 (rssi 1)', () => {
      const { enzymeWrapper } = setup({
        rssi: '1'
@@ -197,4 +247,20 @@ describe('RssiSignalStrength', () => {
        expect(enzymeWrapper.find('.strength-color.strength-0')).to.have.length(1);
      });
    });
+
+  describe('signal strength 0 and error test for unknown error (rssi 0)', () => {
+    const { enzymeWrapper } = setup({
+      rssi: '0'
+    });
+
+    it('should render correct dom for signal strength 0', () => {
+      expect(enzymeWrapper.find('.device-id').text()).to.be.equal('electron-id-12345');
+      expect(enzymeWrapper.find('.rssi-val').text()).to.be.equal('rssi 0 dBm');
+      expect(enzymeWrapper.find('.error').text()).to.be.equal('unknown error code = 0');
+      expect(enzymeWrapper.find('.strength-bars').children()).to.have.length(1);
+      expect(enzymeWrapper.find('.bar-null')).to.have.length(1);
+      expect(enzymeWrapper.find('.strength-color.strength-0')).to.have.length(1);
+    });
+  });
+  // E: Error Codes
 });

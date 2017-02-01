@@ -23,6 +23,7 @@
 .bar-null {
   width: 10px;
   height: 30px;
+  display: inline-block;
   background-color: grey;
 }
 
@@ -33,7 +34,7 @@
 }
 
 .strength-0 {
-  background-color: black;
+  background-color: grey;
 }
 
 .strength-1 {

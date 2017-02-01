@@ -23,7 +23,10 @@ const RssiSignalStrength = (props) => {
   const barsUi = [];
 
   if (props.rssi < 0) {
-    if (props.rssi >= -57) {
+    if (props.rssi < -113 || props.rssi > -51) {
+      errorMsg = 'error = not in valid dBm range';
+    }
+    else if (props.rssi >= -57) {
       strengthBars = 5;
     }
     else if (props.rssi > -68) {
@@ -38,8 +41,11 @@ const RssiSignalStrength = (props) => {
     else if (props.rssi > -104) {
       strengthBars = 1;
     }
+    else {
+      errorMsg = 'error = not in acceptable dBm range';
+    }
   }
-  else if (props.rssi > 2) {
+  else if (props.rssi == 0 || props.rssi > 2) {
     errorMsg = 'unknown error code = ' + props.rssi;
   }
   else {

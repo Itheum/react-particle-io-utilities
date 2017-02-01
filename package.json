@@ -1,6 +1,6 @@
 {
   "name": "react-particle-io-utilities",
-  "version": "0.0.1",
+  "version": "1.0.0",
   "description": "react-particle-io-utilities",
   "main": "./dist/main.js",
   "scripts": {
